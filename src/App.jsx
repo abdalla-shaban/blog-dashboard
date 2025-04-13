@@ -1,5 +1,8 @@
+import Home from './Home/Home';
 function App() {
-  return <h1 className="text-7xl font-bold">Setup Project Structure</h1>;
+  return (
+    <Home />
+  );
 }
 
 export default App;
