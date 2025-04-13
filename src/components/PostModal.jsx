@@ -1,13 +1,22 @@
-// components/EditPostModal.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const EditPostModal = ({ onClose, postData, onUpdate }) => {
-  const [title, setTitle] = React.useState(postData.title);
-  const [content, setContent] = React.useState(postData.content);
+const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setTitle(initialData.title || "");
+      setContent(initialData.content || "");
+    } else {
+      setTitle("");
+      setContent("");
+    }
+  }, [mode, initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate({ title, content });
+    onSubmit({ title, content });
     onClose();
   };
 
@@ -18,7 +27,7 @@ const EditPostModal = ({ onClose, postData, onUpdate }) => {
     >
       <div className="bg-white w-full max-w-4xl rounded-[16px] p-6 md:p-12 shadow-xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl md:text-2xl font-bold text-center mb-6">
-          Update your Post
+          {mode === "edit" ? "Update your Post" : "Add your Post"}
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -53,9 +62,13 @@ const EditPostModal = ({ onClose, postData, onUpdate }) => {
             </button>
             <button
               type="submit"
-              className="w-full md:w-auto px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+              className={`w-full md:w-auto px-4 py-2 text-white rounded ${
+                mode === "edit"
+                  ? "bg-yellow-400 hover:bg-yellow-500"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Update Post
+              {mode === "edit" ? "Update Post" : "Add Post"}
             </button>
           </div>
         </form>
@@ -64,4 +77,4 @@ const EditPostModal = ({ onClose, postData, onUpdate }) => {
   );
 };
 
-export default EditPostModal;
+export default PostModal;

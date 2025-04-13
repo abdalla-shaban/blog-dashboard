@@ -1,4 +1,3 @@
-// components/PostCard.js
 import React, { useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
 
