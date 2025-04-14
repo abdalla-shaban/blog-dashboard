@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PostCard from "./PostCard";
 
-const PostContainer = ({ onEditPost }) => {
+const PostContainer = ({searchQuery, onEditPost }) => {
   const [posts, setPosts] = useState([
     {
       title: "React",
@@ -39,23 +39,27 @@ const PostContainer = ({ onEditPost }) => {
     };
     setPosts(updatedPosts);
   };
-
-  const isSinglePost = posts.length === 1;
+  const filteredPosts = posts.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
 
   return (
     <div className="p-6">
       <div
         className={`grid gap-6 ${
-          isSinglePost ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          filteredPosts.length === 1
+            ? "grid-cols-1"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         }`}
       >
-        {posts.map((post, index) => (
+        {filteredPosts.map((post, index) => (
           <PostCard 
             key={index}
             title={post.title}
             description={post.description}
             date={post.date}
-            isFullWidth={isSinglePost}
+            isFullWidth={filteredPosts.length === 1}
             onEdit={() => onEditPost(post, (updatedPost) => handleUpdatePost(index, updatedPost))}
           />
         ))}

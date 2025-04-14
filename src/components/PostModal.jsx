@@ -5,7 +5,7 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    if (mode === "edit" && initialData) {
+    if (mode === "edit" || mode === "view") {
       setTitle(initialData.title || "");
       setContent(initialData.content || "");
     } else {
@@ -27,7 +27,7 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
     >
       <div className="bg-white w-full max-w-4xl rounded-[16px] p-6 md:p-12 shadow-xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl md:text-2xl font-bold text-center mb-6">
-          {mode === "edit" ? "Update your Post" : "Add your Post"}
+          {mode === "edit" ? "Update your Post" : mode === "view" ? "View Post" : "Add your Post"}
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -39,6 +39,7 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter post title"
               className="w-full border border-gray-300 p-2 rounded"
+              disabled={mode === "view"} // Disable input in view mode
             />
           </div>
 
@@ -49,6 +50,7 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
               onChange={(e) => setContent(e.target.value)}
               placeholder="Enter post content"
               className="w-full border border-gray-300 p-2 rounded h-32"
+              disabled={mode === "view"} // Disable input in view mode
             />
           </div>
 
@@ -58,18 +60,20 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
               onClick={onClose}
               className="w-full md:w-auto px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
             >
-              Cancel
+              Close
             </button>
-            <button
-              type="submit"
-              className={`w-full md:w-auto px-4 py-2 text-white rounded ${
-                mode === "edit"
-                  ? "bg-yellow-400 hover:bg-yellow-500"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
-            >
-              {mode === "edit" ? "Update Post" : "Add Post"}
-            </button>
+            {mode !== "view" && (
+              <button
+                type="submit"
+                className={`w-full md:w-auto px-4 py-2 text-white rounded ${
+                  mode === "edit"
+                    ? "bg-yellow-400 hover:bg-yellow-500"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {mode === "edit" ? "Update Post" : "Add Post"}
+              </button>
+            )}
           </div>
         </form>
       </div>

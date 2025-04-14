@@ -15,6 +15,8 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const [modalMode, setModalMode] = useState("add"); // add or edit
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const handleOpenAddModal = () => {
     setModalMode("add");
@@ -55,9 +57,8 @@ const Home = () => {
         email={data?.user?.email}
         onSignOut={signOut}
       />
-      <SearchBar />
-
-      <PostContainer onEditPost={handleOpenEditModal} />
+      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <PostContainer searchQuery={searchQuery} onEditPost={handleOpenEditModal} />
 
       {showModal && (
         <PostModal

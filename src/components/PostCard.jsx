@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
+import PostModal from "./PostModal"; // Import the PostModal component
 
 const PostCard = ({ title, description, date, onEdit }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -11,6 +13,15 @@ const PostCard = ({ title, description, date, onEdit }) => {
   const handleEditClick = () => {
     toggleMenu();
     onEdit({ title, content: description });
+  };
+
+  const handleViewClick = () => {
+    setIsModalOpen(true); // Open modal on view click
+    toggleMenu(); // Close the action menu when view is clicked
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal when done
   };
 
   return (
@@ -36,7 +47,7 @@ const PostCard = ({ title, description, date, onEdit }) => {
 
         {isMenuOpen && (
           <div className="absolute bottom-10 right-0 bg-white border rounded-md shadow-md w-36 text-sm z-10 overflow-hidden">
-            <button className="w-full px-4 py-2 flex items-center gap-2 text-blue-600 hover:bg-blue-50 font-medium capitalize">
+            <button onClick={handleViewClick} className="w-full px-4 py-2 flex items-center gap-2 text-blue-600 hover:bg-blue-50 font-medium capitalize">
               <FiEye /> View
             </button>
             <div className="border-t" />
@@ -53,8 +64,19 @@ const PostCard = ({ title, description, date, onEdit }) => {
           </div>
         )}
       </div>
+
+      {/* Display PostModal when it's open */}
+      {isModalOpen && (
+        <PostModal 
+          mode="view" 
+          initialData={{ title, content: description }} 
+          onClose={handleCloseModal}
+          onSubmit={() => {}}
+        />
+      )}
     </div>
   );
 };
 
 export default PostCard;
+
