@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\database",
+    "\\src\\pages"
+  ],
+  "SelectedNode": "\\src\\database\\supabase.js",
+  "PreviewInSolutionExplorer": false
+}
