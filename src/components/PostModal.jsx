@@ -24,49 +24,36 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
             const postData = { title, content };
 
             if (mode === "add") {
-                const optimisticPost = {
-                    ...postData,
-                    id: `temp-${Date.now()}`,
-                    created_at: new Date().toISOString(),
-                    isOptimistic: true
-                };
-                onSubmit(optimisticPost);
-
-                const { error } = await supabase
+                const { data, error } = await supabase
                     .from("posts")
-                    .insert([postData]);
+                    .insert([postData])
+                    .select();
 
                 if (error) throw error;
-            } else {
-                const optimisticPost = {
-                    ...initialData,
-                    ...postData,
-                    isOptimistic: true
-                };
-                onSubmit(optimisticPost);
 
-                const { error } = await supabase
+                onSubmit(data[0]);
+            } else {
+                const { data, error } = await supabase
                     .from("posts")
                     .update(postData)
-                    .match({ id: initialData.id });
+                    .eq("id", initialData.id)
+                    .select();
 
                 if (error) throw error;
-            }
 
-            onClose();
+                onSubmit(data[0]);
+            }
         } catch (error) {
             console.error("Submission failed:", error);
             alert(`Error: ${error.message}`);
         } finally {
             setIsSubmitting(false);
+            onClose();
         }
     };
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center px-4"
-            style={{ background: "#00000080" }}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "#00000080" }}>
             <div className="bg-white w-full max-w-4xl rounded-[16px] p-6 md:p-12 shadow-xl max-h-[90vh] overflow-y-auto">
                 <h2 className="text-xl md:text-2xl font-bold text-center mb-6">
                     {mode === "edit" ? "Update your Post" : mode === "view" ? "View Post" : "Add your Post"}

@@ -16,6 +16,7 @@ const Home = () => {
     const [currentPost, setCurrentPost] = useState(null);
     const [modalMode, setModalMode] = useState("add");
     const [searchQuery, setSearchQuery] = useState("");
+    const [posts, setPosts] = useState([]);
 
     const handleOpenAddModal = () => {
         setModalMode("add");
@@ -33,7 +34,15 @@ const Home = () => {
         setCurrentPost(null);
     };
 
-    const handleSubmitSuccess = () => {
+    const handleSubmitSuccess = (newPost) => {
+        setPosts(prev => {
+            const exists = prev.find(p => p.id === newPost.id);
+            if (exists) {
+                return prev.map(p => p.id === newPost.id ? newPost : p);
+            } else {
+                return [newPost, ...prev];
+            }
+        });
         handleCloseModal();
     };
 
@@ -51,6 +60,8 @@ const Home = () => {
             />
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             <PostContainer
+                posts={posts}
+                setPosts={setPosts}
                 searchQuery={searchQuery}
                 onEditPost={handleOpenEditModal}
             />
