@@ -61,10 +61,11 @@ const PostContainer = ({ searchQuery, onEditPost }) => {
 
   const handleDelete = async (postId) => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("posts")
         .delete()
-        .match({ id: postId });
+        .eq("id", postId);
+      console.log("Delete response:", { data, error });
 
       if (error) {
         console.error("Error deleting post:", error);
