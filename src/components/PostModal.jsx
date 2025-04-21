@@ -24,39 +24,31 @@ const PostModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
       const postData = { title, content };
 
       if (mode === "add") {
-        const optimisticPost = {
-          ...postData,
-          id: `temp-${Date.now()}`,
-          created_at: new Date().toISOString(),
-          isOptimistic: true,
-        };
-        onSubmit(optimisticPost);
-
-        const { error } = await supabase.from("posts").insert([postData]);
+        const { data, error } = await supabase
+          .from("posts")
+          .insert([postData])
+          .select();
 
         if (error) throw error;
-      } else {
-        const optimisticPost = {
-          ...initialData,
-          ...postData,
-          isOptimistic: true,
-        };
-        onSubmit(optimisticPost);
 
-        const { error } = await supabase
+        onSubmit(data[0]);
+      } else {
+        const { data, error } = await supabase
           .from("posts")
           .update(postData)
-          .match({ id: initialData.id });
+          .eq("id", initialData.id)
+          .select();
 
         if (error) throw error;
-      }
 
-      onClose();
+        onSubmit(data[0]);
+      }
     } catch (error) {
       console.error("Submission failed:", error);
       alert(`Error: ${error.message}`);
     } finally {
       setIsSubmitting(false);
+      onClose();
     }
   };
 
