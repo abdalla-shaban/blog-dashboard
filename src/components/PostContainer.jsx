@@ -1,9 +1,12 @@
 ﻿﻿import React, { useEffect, useState } from "react";
 import { supabase } from "../database/supabase";
 import PostCard from "./PostCard";
+import { deletePost } from "../store/features/posts/postSlice";
+import { useDispatch } from "react-redux";
 
 const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -61,22 +64,12 @@ const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
   }, [setPosts]);
 
   const handleDelete = async (postId) => {
-    try {
-      const { data, error } = await supabase
-        .from("posts")
-        .delete()
-        .eq("id", postId);
-      console.log("Delete response:", { data, error });
-
-      if (error) {
-        console.error("Error deleting post:", error);
-      } else {
-        console.log("Post deleted successfully");
-        setPosts((prev) => prev.filter((post) => post.id !== postId));
-      }
-    } catch (error) {
-      console.error("Unexpected error deleting post:", error);
-    }
+    dispatch(deletePost({ postId }))
+      .unwrap()
+      .then(() => {
+        const newPosts = posts.filter((post) => post.id !== postId);
+        setPosts(newPosts);
+      });
   };
 
   if (loading) {
