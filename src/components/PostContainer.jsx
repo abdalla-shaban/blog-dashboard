@@ -1,12 +1,9 @@
-﻿import React, { useEffect, useState } from "react";
+﻿﻿import React, { useEffect, useState } from "react";
 import { supabase } from "../database/supabase";
 import PostCard from "./PostCard";
 
-const PostContainer = ({ searchQuery, onEditPost }) => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
 const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -32,9 +29,9 @@ const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
     };
 
     fetchPosts();
-        fetchPosts();
-    }, [searchQuery, setPosts]);
+  }, [searchQuery, setPosts]);
 
+  useEffect(() => {
     const subscription = supabase
       .channel("posts_changes")
       .on(
@@ -57,26 +54,11 @@ const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
         }
       )
       .subscribe();
-    useEffect(() => {
-        const subscription = supabase
-            .channel("posts_changes")
-            .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, (payload) => {
-                if (payload.eventType === "INSERT") {
-                    setPosts(prev => [payload.new, ...prev]);
-                } else if (payload.eventType === "UPDATE") {
-                    setPosts(prev =>
-                        prev.map(post => (post.id === payload.new.id ? payload.new : post))
-                    );
-                } else if (payload.eventType === "DELETE") {
-                    setPosts(prev => prev.filter(post => post.id !== payload.old.id));
-                }
-            })
-            .subscribe();
 
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [searchQuery]);
+  }, [setPosts]);
 
   const handleDelete = async (postId) => {
     try {
@@ -96,30 +78,6 @@ const PostContainer = ({ posts, setPosts, searchQuery, onEditPost }) => {
       console.error("Unexpected error deleting post:", error);
     }
   };
-        return () => {
-            supabase.removeChannel(subscription);
-        };
-    }, [setPosts]);
-
-    const handleDelete = async (postId) => {
-        try {
-            const { data, error } = await supabase
-                .from("posts")
-                .delete()
-                .eq("id", postId);
-            console.log("Delete response:", { data, error });
-
-            if (error) {
-                console.error("Error deleting post:", error);
-            } else {
-                console.log("Post deleted successfully");
-                setPosts((prev) => prev.filter((post) => post.id !== postId));
-            }
-        } catch (error) {
-            console.error("Unexpected error deleting post:", error);
-        }
-    };
-
 
   if (loading) {
     return (
