@@ -4,7 +4,7 @@ import { supabase } from "../database/supabase";
 import { logOut } from "../store/features/auth/authSlice";
 
 import Navbar from "../components/Navbar";
-import SearchBar from "../components/Searchbar";
+import SearchBar from "../components/SearchBar";
 import PostContainer from "../components/PostContainer";
 import PostModal from "../components/PostModal";
 
