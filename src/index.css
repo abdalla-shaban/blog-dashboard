@@ -1,1 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @import "tailwindcss";
+
+@theme {
+  --font-poppins: "Poppins", sans-serif;
+  --color-main: rgb(12, 92, 255);
+  --color-main-alt: rgba(12, 92, 255, 0.5);
+  --color-warning: rgba(246, 187, 99);
+  --color-warning-alt: rgba(246, 187, 99, 0.5);
+  --color-error: rgba(191, 30, 30);
+  --color-error-alt: rgba(191, 30, 30, 0.5);
+  --color-subtext: rgba(0, 0, 0, 0.5);
+}
+
+.fs-2xl {
+  @apply text-[32px] md:text-[52px]
+}
+
+.fs-xl {
+  @apply text-[28px] md:text-[48px]
+}
+
+.fs-lg {
+  @apply text-[22px] md:text-[32px]
+}
+
+.bd-container {
+  @apply px-[24px] md:px-[32px] lg:px-[48px]
+}
+
+button {
+  cursor: pointer;
+}
+
+body {
+  @apply bg-[#FCFCFE]
+}
